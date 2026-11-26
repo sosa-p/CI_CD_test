@@ -1,0 +1,55 @@
+name: Naver Search Regression
+
+on:
+  # 매일 오전 9시(KST) 실행 — cron 은 UTC 기준이라 00:00 UTC
+  schedule:
+    - cron: '0 0 * * *'
+  # Actions 탭에서 수동 실행 (실패 실습용 옵션 포함)
+  workflow_dispatch:
+    inputs:
+      force_fail:
+        description: '일부러 실패시켜 스크린샷/trace 확인하기'
+        type: boolean
+        default: false
+  # 네이버 테스트 코드가 바뀌었을 때도 실행
+  push:
+    branches: [main]
+    paths:
+      - 'naver/**'
+      - '.github/workflows/naver-regression.yml'
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: naver
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: naver/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Run regression tests
+        env:
+          FORCE_FAIL: ${{ inputs.force_fail && '1' || '0' }}
+        run: pytest
+
+      # 실패했을 때만 스크린샷 + trace 업로드
+      - name: Upload failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: naver-failure-${{ github.run_number }}
+          path: naver/test-results/
+          retention-days: 14
