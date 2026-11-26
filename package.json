@@ -1,0 +1,16 @@
+{
+  "name": "ci-cd-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright + GitHub Actions 실습",
+  "scripts": {
+    "start": "node server.js",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^26.6.11"
+  }
+}
