@@ -1,9 +1,9 @@
 name: Naver Search Regression
 
 on:
-  # 매일 오전 9시(KST) 실행 — cron 은 UTC 기준이라 00:00 UTC
+  # 매일 밤 9시(KST) 실행 — cron 은 UTC 기준이라 12:00 UTC
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 12 * * *'
   # Actions 탭에서 수동 실행 (실패 실습용 옵션 포함)
   workflow_dispatch:
     inputs:
