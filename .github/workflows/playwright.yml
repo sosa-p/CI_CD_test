@@ -15,10 +15,10 @@ jobs:
 
     steps:
       # 1. 저장소 코드 내려받기
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # 2. Node.js 설치 (+ npm 캐시로 속도 향상)
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: lts/*
           cache: npm
@@ -36,7 +36,7 @@ jobs:
         run: npx playwright test
 
       # 6. 성공/실패와 관계없이 HTML 리포트를 결과물로 업로드
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
